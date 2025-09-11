@@ -35,26 +35,30 @@ const fetchData=async<T>(url:string):Promise<T>=>{
     }
 }
 
-const users:User[]=[];
-const posts:Post[]=[];
+let users:User[]=[];
+let posts:Post[]=[];
 
 const fetchAllData=async()=>{
     try {
         
-        const users=await fetchData<User[]>("https://jsonplaceholder.typicode.com/users");
-        const posts=await fetchData<Post[]>("https://jsonplaceholder.typicode.com/posts");
-
-        console.log("Posts:",posts);
-
-        console.log("Users:",users);
+        users=await fetchData<User[]>("https://jsonplaceholder.typicode.com/users");
+        posts=await fetchData<Post[]>("https://jsonplaceholder.typicode.com/posts");
 
     } catch (error) {
-        console.log(error)
-        
+        console.log("Error in fetchAllData");
+        console.error("Failed to fetch the request",error)
     }
 }
 
-fetchAllData()
+const main=async()=>{
+    await fetchAllData();
+    console.log(users);
+    console.log(posts);
+}
+
+main()
+
+
 
 
 
