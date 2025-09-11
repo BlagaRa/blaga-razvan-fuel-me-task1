@@ -1,3 +1,4 @@
+
 interface User{
     id:number,
     name:string,
@@ -66,12 +67,28 @@ class ReportGenerator{
         }
     }
 
+    private createLogger=async(context:string)=>{
+        if(context==='DataFetching'){
+            return 'Fetching users and posts...'
+        }else if(context==='CombiningUserWPosts'){
+            return 'Combining the users with its posts'
+        }else if(context='Posting'){
+            return 'Posting the users with their posts'
+        }
+        return 'This context does not exist';
+    }
+
     
 
     public main=async():Promise<void>=>{
         try {
+            console.log(this.createLogger('DataFetching'));
             await this.processingData();
+            
+            console.log(this.createLogger("CombiningUserWPosts"));
             this.combineUsersWithPosts();
+
+            console.log(this.createLogger('Posting'))
             console.log(this.usersWithPosts);
         } catch (error) {
             console.log(error);
