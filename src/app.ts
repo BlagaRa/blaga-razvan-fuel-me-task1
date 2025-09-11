@@ -78,6 +78,14 @@ class ReportGenerator{
         return 'This context does not exist';
     }
 
+    private postingFunction=(userWithPosts:UserWithPosts)=>{
+        console.log(userWithPosts.user);
+        userWithPosts.posts.forEach(poast=>{
+            console.log(poast);
+        })
+
+    }
+
     
 
     public main=async():Promise<void>=>{
@@ -89,7 +97,7 @@ class ReportGenerator{
             this.combineUsersWithPosts();
 
             console.log(this.createLogger('Posting'))
-            console.log(this.usersWithPosts);
+            this.usersWithPosts.forEach(user=>this.postingFunction(user))
         } catch (error) {
             console.log(error);
         }
