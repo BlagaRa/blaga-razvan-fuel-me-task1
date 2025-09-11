@@ -21,6 +21,7 @@ interface UserWithPosts{
 class ReportGenerator{
     private users:User[]=[];
     private posts:Post[]=[];
+    private usersWithPosts:UserWithPosts[]=[];
     
 
     private fetchData=async<T>(url:string):Promise<T>=>{
@@ -41,7 +42,7 @@ class ReportGenerator{
 
     
 
-    private processingData=async()=>{
+    private processingData=async():Promise<void>=>{
         try {
             this.users=await this.fetchData<User[]>("https://jsonplaceholder.typicode.com/users");
             this.posts=await this.fetchData<Post[]>("https://jsonplaceholder.typicode.com/posts");
@@ -51,14 +52,29 @@ class ReportGenerator{
         }
     }
 
+    private combineUsersWithPosts=async()=>{
+        try {
+            this.usersWithPosts=this.users.map(user=>{
+                const postsForUser=this.posts.filter(post=>post.userId===user.id)
+                
+                return{ user:user , posts:postsForUser }
+            });
+
+        } catch (error) {
+            console.log("Error in combineUsersWithPosts");
+            throw error;
+        }
+    }
+
+    
+
     public main=async():Promise<void>=>{
         try {
             await this.processingData();
-            console.log(this.users);
-            console.log(this.posts);
+            this.combineUsersWithPosts();
+            console.log(this.usersWithPosts);
         } catch (error) {
             console.log(error);
-            
         }
     }
 }
