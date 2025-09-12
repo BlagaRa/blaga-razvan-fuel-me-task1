@@ -19,11 +19,20 @@ interface UserWithPosts{
     posts:Post[]
 }
 
+function createLogger(context:string){
+    function loggingFunction(message:string){
+        console.log(`[${context}] ${message}`)
+    }
+    return loggingFunction;
+}
+
 class ReportGenerator{
     private users:User[]=[];
     private posts:Post[]=[];
     private usersWithPosts:UserWithPosts[]=[];
     
+    private loggerFetching=createLogger("DataFetching");
+    private loggerProcessing=createLogger("Processing");
 
     private fetchData=async<T>(url:string):Promise<T>=>{
         try {
@@ -67,16 +76,8 @@ class ReportGenerator{
         }
     }
 
-    private createLogger=async(context:string)=>{
-        if(context==='DataFetching'){
-            return 'Fetching users and posts...'
-        }else if(context==='CombiningUserWPosts'){
-            return 'Combining the users with its posts'
-        }else if(context='Posting'){
-            return 'Posting the users with their posts'
-        }
-        return 'This context does not exist';
-    }
+    
+    
 
     private postingFunction=(userWithPosts:UserWithPosts)=>{
         console.log(userWithPosts.user);
@@ -86,18 +87,20 @@ class ReportGenerator{
 
     }
 
-    
+
 
     public main=async():Promise<void>=>{
         try {
-            console.log(this.createLogger('DataFetching'));
+            this.loggerFetching("Fetching users and posts...");
             await this.processingData();
             
-            console.log(this.createLogger("CombiningUserWPosts"));
-            this.combineUsersWithPosts();
+            this.loggerProcessing("Combining every users with their posts...");
+            await this.combineUsersWithPosts();
 
-            console.log(this.createLogger('Posting'))
+            this.loggerProcessing("Printing users with their posts");
             this.usersWithPosts.forEach(user=>this.postingFunction(user))
+
+            console.log("Success");
         } catch (error) {
             console.log(error);
         }
