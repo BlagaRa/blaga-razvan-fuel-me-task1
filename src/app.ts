@@ -15,7 +15,10 @@ interface Post{
 }
 
 interface UserWithPosts{
-    user:User,
+    userId:number,
+    name:string,
+    email:string,
+    username:string,
     posts:Post[]
 }
 
@@ -67,7 +70,11 @@ class ReportGenerator{
             this.usersWithPosts=this.users.map(user=>{
                 const postsForUser=this.posts.filter(post=>post.userId===user.id)
                 
-                return{ user:user , posts:postsForUser }
+                return{ userId:user.id,
+                        username:user.username,
+                        email:user.email,
+                        name:user.name,
+                        posts:postsForUser }
             });
 
         } catch (error) {
@@ -80,11 +87,7 @@ class ReportGenerator{
     
 
     private postingFunction=(userWithPosts:UserWithPosts)=>{
-        console.log(userWithPosts.user);
-        userWithPosts.posts.forEach(poast=>{
-            console.log(poast);
-        })
-
+        console.log(userWithPosts)
     }
 
 
