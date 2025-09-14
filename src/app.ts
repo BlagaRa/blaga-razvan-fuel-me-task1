@@ -1,25 +1,44 @@
-
 interface User{
     id:number,
     name:string,
     username:string,
-    email:string
+    email:string,
+    address:{
+        street:string,
+        suite:string,
+        city:string,
+        zipcode:string,
+        geo:{
+            lat:string,
+            lng:string
+        }
+    }
+    phone:string,
+    website:string,
+    company:{
+        name:string,
+        catchPhrase:string,
+        bs:string,
+    }
 }
 
 interface Post{
-    id:number,
     userId:number,
+    id:number,
     title:string,
     body:string
-
 }
 
 interface UserWithPosts{
     userId:number,
     name:string,
-    email:string,
     username:string,
-    posts:Post[]
+    email:string,
+    posts:{
+            postId:number,
+            title:string,
+            body:string
+    }[];  
 }
 
 function createLogger(context:string){
@@ -68,14 +87,22 @@ class ReportGenerator{
     private combineUsersWithPosts=async()=>{
         try {
             this.usersWithPosts=this.users.map(user=>{
-                const postsForUser=this.posts.filter(post=>post.userId===user.id)
+                const existingPosts:Post[]=this.posts.filter(post=>post.userId===user.id);
+
+                const posts:{postId:number,title:string,body:string}[]=existingPosts.map(post=>{
+                    return {postId:post.id,
+                            title:post.title,
+                            body:post.body
+                    }
+                })
                 
-                return{ userId:user.id,
-                        username:user.username,
+                return {userId:user.id,
                         email:user.email,
+                        username:user.username,
                         name:user.name,
-                        posts:postsForUser }
-            });
+                        posts
+                }
+            })
 
         } catch (error) {
             console.log("Error in combineUsersWithPosts");
@@ -87,7 +114,7 @@ class ReportGenerator{
     
 
     private postingFunction=(userWithPosts:UserWithPosts)=>{
-        console.log(userWithPosts)
+        console.log(userWithPosts);
     }
 
 
