@@ -80,11 +80,11 @@ class ReportGenerator{
             this.posts=await this.fetchData<Post[]>("https://jsonplaceholder.typicode.com/posts");
         } catch (error) {
             console.log("Error in processingData");
-            throw error;
+            console.log(error);
         }
     }
 
-    private combineUsersWithPosts=async()=>{
+    private combineUsersWithPosts=():void=>{
         try {
             this.usersWithPosts=this.users.map(user=>{
                 const existingPosts:Post[]=this.posts.filter(post=>post.userId===user.id);
@@ -113,7 +113,7 @@ class ReportGenerator{
     
     
 
-    private postingFunction=(userWithPosts:UserWithPosts)=>{
+    private postingFunction=(userWithPosts:UserWithPosts):void=>{
         console.log(userWithPosts);
     }
 
@@ -125,7 +125,7 @@ class ReportGenerator{
             await this.processingData();
             
             this.loggerProcessing("Combining every users with their posts...");
-            await this.combineUsersWithPosts();
+            this.combineUsersWithPosts();
 
             this.loggerProcessing("Printing users with their posts");
             this.usersWithPosts.forEach(user=>this.postingFunction(user))
